@@ -1,5 +1,4 @@
-﻿using System;
-using TechTalk.SpecFlow;
+﻿using TechTalk.SpecFlow;
 
 namespace TrueOrFalse.Tests.AcceptanceTests
 {
@@ -18,13 +17,13 @@ namespace TrueOrFalse.Tests.AcceptanceTests
         {
             _scenarioContext.Pending();
         }
-        
+
         [When(@"I give five answers right")]
         public void WhenIGiveFiveAnswersRight()
         {
             _scenarioContext.Pending();
         }
-        
+
         [Then(@"I win the game")]
         public void ThenIWinTheGame()
         {
