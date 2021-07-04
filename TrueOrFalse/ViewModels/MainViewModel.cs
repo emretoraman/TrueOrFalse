@@ -12,7 +12,7 @@ namespace TrueOrFalse.ViewModels
         private readonly IPersistence _persistence;
         private readonly IDialogService _dialogService;
         private readonly IWindowManager _windowManager;
-        private int _currentNumner;
+        private int _currentNumber;
 
         public MainViewModel(IPersistence persistence, IDialogService dialogService, IWindowManager windowManager)
         {
@@ -30,21 +30,21 @@ namespace TrueOrFalse.ViewModels
 
         public int CurrentNumber
         {
-            get => _currentNumner;
+            get => _currentNumber;
             set
             {
-                _currentNumner = value;
+                _currentNumber = value;
                 SetCurrentState(GetCurrentIndex());
 
                 NotifyOfPropertyChange();
             }
         }
 
-        public bool CanSaveStatement => !IsStatementEmpty && _persistence.Exists(GetCurrentIndex());
+        public bool CanAddStatement => !IsStatementEmpty && !_persistence.Exists(GetCurrentIndex());
 
         public bool CanRemoveStatement => _persistence.Exists(GetCurrentIndex());
 
-        public bool CanAddStatement => !IsStatementEmpty && !_persistence.Exists(GetCurrentIndex());
+        public bool CanSaveStatement => !IsStatementEmpty && _persistence.Exists(GetCurrentIndex());
 
         public bool IsStatementEmpty => string.IsNullOrWhiteSpace(CurrentStatement.Text);
 
@@ -60,66 +60,6 @@ namespace TrueOrFalse.ViewModels
             Environment.Exit(0);
         }
 
-        public void AddStatement()
-        {
-            _persistence.Add(GetCurrentStatementState());
-            CurrentNumber++;
-
-            CurrentStatement.Text = string.Empty;
-            CurrentStatement.IsTrue = false;
-
-            NotifyOfPropertyChange(() => CurrentStatement);
-        }
-
-        public void SaveStatement()
-        {
-            UpdateCurrentStatement();
-            CurrentNumber++;
-        }
-
-        public void RemoveStatement()
-        {
-            if (_persistence.Exists(GetCurrentIndex()))
-            {
-                _persistence.Remove(GetCurrentIndex());
-
-                CurrentNumber = CurrentNumber > 1 ? CurrentNumber - 1 : 1;
-            }
-        }
-
-        public void StartGame()
-        {
-            _windowManager.ShowDialogAsync(new GameViewModel(_persistence.List, _dialogService));
-        }
-
-        public void SaveDb()
-        {
-            _persistence.Save();
-        }
-
-        public void Paste()
-        {
-            CurrentStatement.Text = Clipboard.GetText();
-        }
-
-        public void Copy()
-        {
-            Clipboard.SetText(CurrentStatement.Text);
-            CurrentStatement.Text = string.Empty;
-        }
-
-        public void SaveDbAs()
-        {
-            DialogResult dialogResult = _dialogService.OpenFileDialog();
-            if (dialogResult.Result == true)
-            {
-                _persistence.FileName = dialogResult.FileName;
-                _persistence.Load();
-
-                CurrentNumber = 1;
-            }
-        }
-
         public void NewDb()
         {
             DialogResult dialogResult = _dialogService.SaveFileDialog();
@@ -132,6 +72,80 @@ namespace TrueOrFalse.ViewModels
                 CurrentStatement.Text = string.Empty;
                 CurrentStatement.IsTrue = false;
             }
+        }
+
+        public void OpenDb()
+        {
+            DialogResult dialogResult = _dialogService.OpenFileDialog();
+            if (dialogResult.Result == true)
+            {
+                _persistence.FileName = dialogResult.FileName;
+                _persistence.Load();
+
+                CurrentNumber = 1;
+            }
+        }
+
+        public void SaveDb()
+        {
+            _persistence.Save();
+        }
+
+        public void SaveDbAs()
+        {
+            DialogResult dialogResult = _dialogService.SaveFileDialog();
+            if (dialogResult.Result == true)
+            {
+                _persistence.Save();
+            }
+        }
+
+        public void StartGame()
+        {
+            _windowManager.ShowDialogAsync(new GameViewModel(_persistence.List, _dialogService));
+        }
+
+        public void Cut()
+        {
+            Clipboard.SetText(CurrentStatement.Text);
+            CurrentStatement.Text = string.Empty;
+        }
+
+        public void Copy()
+        {
+            Clipboard.SetText(CurrentStatement.Text);
+        }
+
+        public void Paste()
+        {
+            CurrentStatement.Text = Clipboard.GetText();
+        }
+
+        public void AddStatement()
+        {
+            _persistence.Add(GetCurrentStatementState());
+            CurrentNumber++;
+
+            CurrentStatement.Text = string.Empty;
+            CurrentStatement.IsTrue = false;
+
+            NotifyOfPropertyChange(() => CurrentStatement);
+        }
+
+        public void RemoveStatement()
+        {
+            if (_persistence.Exists(GetCurrentIndex()))
+            {
+                _persistence.Remove(GetCurrentIndex());
+
+                CurrentNumber = CurrentNumber > 1 ? CurrentNumber - 1 : 1;
+            }
+        }
+
+        public void SaveStatement()
+        {
+            UpdateCurrentStatement();
+            CurrentNumber++;
         }
 
         private Statement GetCurrentStatementState()

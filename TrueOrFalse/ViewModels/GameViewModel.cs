@@ -10,22 +10,50 @@ namespace TrueOrFalse.ViewModels
     {
         private readonly List<Statement> _statements;
         private readonly IDialogService _dialogService;
+        private int _statementNumber;
+        private string _statementText;
+        private int _score;
 
         public GameViewModel(List<Statement> statements, IDialogService dialogService)
         {
             _statements = statements;
             _dialogService = dialogService;
+            NumberOfStatements = _statements.Count;
 
             ShowNext();
         }
 
-        public string StatementText { get; set; }
+        public int NumberOfStatements { get; }
 
-        public int StatementNumber { get; set; }
+        public int StatementNumber
+        {
+            get => _statementNumber;
+            set
+            {
+                _statementNumber = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
-        public int NumberOfStatements { get; set; }
-        
-        public int Score { get; set; }
+        public string StatementText
+        {
+            get => _statementText;
+            set
+            {
+                _statementText = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public int Score
+        {
+            get => _score;
+            set
+            {
+                _score = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
         public Statement CurrentStatement => _statements[StatementNumber - 1];
 
@@ -40,10 +68,9 @@ namespace TrueOrFalse.ViewModels
         {
         }
 
-        public static GameResult GetResult(int scores, int numberOfStatements)
+        public void True()
         {
-            double result = (double)scores * 100 / numberOfStatements;
-            return result > 70 ? GameResult.Win : GameResult.Loss;
+            ProcessAnswer(true);
         }
 
         public void False()
@@ -51,14 +78,15 @@ namespace TrueOrFalse.ViewModels
             ProcessAnswer(false);
         }
 
-        public void True()
-        {
-            ProcessAnswer(true);
-        }
-
         public bool EndOfGame()
         {
             return StatementNumber == _statements.Count;
+        }
+
+        public GameResult GetResult()
+        {
+            double result = Score * 100 / NumberOfStatements;
+            return result > 70 ? GameResult.Win : GameResult.Loss;
         }
 
         private void ShowNext()
@@ -77,7 +105,7 @@ namespace TrueOrFalse.ViewModels
 
             if (EndOfGame())
             {
-                GameResult result = GetResult(Score, NumberOfStatements);
+                GameResult result = GetResult();
                 _dialogService.OpenInfoWindow("Result", result.ToString());
 
                 TryCloseAsync();
