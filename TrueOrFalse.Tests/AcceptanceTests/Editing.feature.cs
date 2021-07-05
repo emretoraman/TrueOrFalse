@@ -122,7 +122,7 @@ this.ScenarioInitialize(scenarioInfo);
  this.FeatureBackground();
 #line hidden
 #line 10
- testRunner.Given("I add one statement", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.When("I add one statement", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 11
  testRunner.Then("it gets saved and I can get back to it", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");

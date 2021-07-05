@@ -37,5 +37,15 @@ namespace TrueOrFalse.Models
                 OnPropertyChanged();
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Statement other && Text == other.Text && IsTrue == other.IsTrue;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

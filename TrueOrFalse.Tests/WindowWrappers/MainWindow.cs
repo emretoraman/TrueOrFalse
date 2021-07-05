@@ -1,14 +1,15 @@
 ﻿using FlaUI.Core.AutomationElements;
+using FlaUI.Core.Definitions;
 using System.Linq;
 using TrueOrFalse.Models;
 
-namespace TrueOrFalse.Tests.ViewWrappers
+namespace TrueOrFalse.Tests.WindowWrappers
 {
-    public class MainViewWrapper
+    public class MainWindow
     {
         private readonly Window _window;
 
-        public MainViewWrapper(Window window)
+        public MainWindow(Window window)
         {
             _window = window;
         }
@@ -16,18 +17,19 @@ namespace TrueOrFalse.Tests.ViewWrappers
         public Window GetGameWindow()
         {
             //todo:
-            var x = _window.ModalWindows;
             return _window.ModalWindows.First();
         }
 
         public void StartGame()
         {
-            _window.FindFirstDescendant(cf => cf.ByName("StartGame")).As<MenuItem>().Click();
+            MenuItem file = _window.FindFirstDescendant(cf => cf.ByName("File")).As<MenuItem>();
+            file.Items.First(i=>i.AutomationId == "StartGame").Click();
         }
 
         public void Cut()
         {
-            _window.FindFirstDescendant(cf => cf.ByName("Cut")).As<MenuItem>().Click();
+            MenuItem edit = _window.FindFirstDescendant(cf => cf.ByName("Edit")).As<MenuItem>();
+            edit.Items.First(i => i.AutomationId == "Cut").Click();
         }
 
         public Statement GetStatement()
@@ -51,28 +53,52 @@ namespace TrueOrFalse.Tests.ViewWrappers
 
         public void RemoveStatement()
         {
-            _window.FindFirstDescendant(cf => cf.ByName("RemoveStatement")).As<Button>().Click();
+            _window.FindFirstDescendant("RemoveStatement").As<Button>().Click();
         }
 
         public void SaveStatement()
         {
-            _window.FindFirstDescendant(cf => cf.ByName("SaveStatement")).As<Button>().Click();
+            _window.FindFirstDescendant("SaveStatement").As<Button>().Click();
         }
 
         public void PreviousStatement()
         {
-            _window.FindFirstDescendant(cf => cf.ByName("PART_DecreaseButton")).As<Button>().Click();
+            _window.FindFirstDescendant("PART_DecreaseButton").As<Button>().Click();
         }
 
         public void NextStatement()
         {
-            _window.FindFirstDescendant(cf => cf.ByName("PART_IncreaseButton")).As<Button>().Click();
+            _window.FindFirstDescendant("PART_IncreaseButton").As<Button>().Click();
         }
 
-        private int GetCurrentStatementNumber()
+        public void SetStatementNumber(int number)
         {
-            TextBox textBox = _window.FindFirstDescendant(cf => cf.ByName("PART_TextBox")).As<TextBox>();
-            return int.Parse(textBox.Text);
+            GetStamentNumberTextBox().Text = number.ToString();
+        }
+
+        public int GetNumberOfStatements()
+        {
+            SetStatementNumber(1);
+
+            int number = 0;
+            while (!string.IsNullOrWhiteSpace(GetStatementTextTextBox().Text))
+            {
+                NextStatement();
+                number++;
+            }
+
+            return number;
+        }
+
+        //private int GetStatementNumber()
+        //{
+        //    TextBox textBox = _window.FindFirstDescendant(cf => cf.ByName("PART_TextBox")).As<TextBox>();
+        //    return int.Parse(textBox.Text);
+        //}
+
+        private TextBox GetStamentNumberTextBox()
+        {
+            return _window.FindFirstDescendant("PART_TextBox").As<TextBox>();
         }
 
         private TextBox GetStatementTextTextBox()
@@ -97,7 +123,7 @@ namespace TrueOrFalse.Tests.ViewWrappers
 
         private void ClickAddStatementButton()
         {
-            _window.FindFirstDescendant(cf => cf.ByName("AddStatement")).As<Button>().Click();
+            _window.FindFirstDescendant("AddStatement").As<Button>().Click();
         }
     }
 }

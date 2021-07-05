@@ -7,7 +7,7 @@
 		Given I have five statements
 
 Scenario: Add a statement
-	Given I add one statement
+	When I add one statement
 	Then it gets saved and I can get back to it
 
 Scenario: Edit and save a statement

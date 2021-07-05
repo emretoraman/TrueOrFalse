@@ -1,93 +1,117 @@
-﻿using TechTalk.SpecFlow;
+﻿using System.Collections.Generic;
+using System.Windows;
+using TechTalk.SpecFlow;
+using TrueOrFalse.Models;
+using TrueOrFalse.Tests.WindowWrappers;
+using Xunit;
 
 namespace TrueOrFalse.Tests.AcceptanceTests
 {
     [Binding]
+    [Scope(Feature = "Editing")]
     public class EditingSteps
     {
-        private readonly ScenarioContext _scenarioContext;
-
-        public EditingSteps(ScenarioContext scenarioContext)
-        {
-            _scenarioContext = scenarioContext;
-        }
+        private List<Statement> _statements;
 
         [Given(@"I have five statements")]
         public void GivenIHaveFiveStatements()
         {
-            _scenarioContext.Pending();
-        }
-
-        [Given(@"I add one statement")]
-        public void GivenIAddOneStatement()
-        {
-            _scenarioContext.Pending();
+            _statements = new List<Statement>
+            {
+                new Statement("1 equals one", true),
+                new Statement("2 equals two ", true),
+                new Statement("3 equals zero", false),
+                new Statement("4 equals four", true),
+                new Statement("5 equals zero", false)
+            };
         }
 
         [Given(@"I added one statement")]
         public void GivenIAddedOneStatement()
         {
-            _scenarioContext.Pending();
+            Windows.Main.AddStatement(_statements[0]);
         }
 
         [Given(@"current statement is not empty")]
-        public void GivenCurrentStatementIsNotEmpty()
+        public static void GivenCurrentStatementIsNotEmpty()
         {
-            _scenarioContext.Pending();
+            Windows.Main.SetStatementNumber(1);
         }
 
         [Given(@"I added two statements")]
         public void GivenIAddedTwoStatements()
         {
-            _scenarioContext.Pending();
+            Windows.Main.AddStatement(_statements[0]);
+            Windows.Main.AddStatement(_statements[1]);
+        }
+
+        [When(@"I add one statement")]
+        public void WhenIAddOneStatement()
+        {
+            Windows.Main.AddStatement(_statements[0]);
         }
 
         [When(@"I edit both text and statement's flag")]
-        public void WhenIEditBothTextAndStatementSFlag()
+        public static void WhenIEditBothTextAndStatementSFlag()
         {
-            _scenarioContext.Pending();
+            Statement statement = new("6 equals six", true);
+            Windows.Main.SetStatement(statement);
         }
 
         [When(@"I save the editings")]
-        public void WhenSaveTheEditings()
+        public static void WhenSaveTheEditings()
         {
-            _scenarioContext.Pending();
+            Windows.Main.SaveStatement();
         }
 
         [When(@"I remove one of them")]
-        public void WhenIRemoveOneOfThem()
+        public static void WhenIRemoveOneOfThem()
         {
-            _scenarioContext.Pending();
+            Windows.Main.SetStatementNumber(1);
+            Windows.Main.RemoveStatement();
         }
 
         [When(@"I cut the statement's text")]
-        public void WhenICutTheStatementSText()
+        public static void WhenICutTheStatementSText()
         {
-            _scenarioContext.Pending();
+            Windows.Main.Cut();
         }
 
         [Then(@"it gets saved and I can get back to it")]
         public void ThenItGetsSavedAndICanGetBackToIt()
         {
-            _scenarioContext.Pending();
+            Windows.Main.PreviousStatement();
+            Statement actual = Windows.Main.GetStatement();
+            Statement expected = _statements[0];
+
+            Assert.Equal(expected, actual);
         }
 
         [Then(@"it gets saved")]
         public void ThenItGetsSaved()
         {
-            _scenarioContext.Pending();
+            Windows.Main.PreviousStatement();
+            Statement actual = Windows.Main.GetStatement();
+            Statement expected = _statements[0];
+
+            Assert.NotEqual(expected, actual);
         }
 
         [Then(@"only one statement remains in the list")]
-        public void ThenOnlyOneStatementRemainsInTheList()
+        public static void ThenOnlyOneStatementRemainsInTheList()
         {
-            _scenarioContext.Pending();
+            Assert.Equal(1, Windows.Main.GetNumberOfStatements());
         }
 
         [Then(@"it gets removed from the UI and saved into clipboard")]
         public void ThenItGetsRemovedFromTheUIAndSavedIntoClipboard()
         {
-            _scenarioContext.Pending();
+            string expected = _statements[0].Text;
+            Assert.Empty(Windows.Main.GetStatement().Text);
+            ThreadHelper.StartStaTask(() => 
+            {
+                Assert.Equal(expected, Clipboard.GetText());
+            }).Wait();
         }
     }
 }
