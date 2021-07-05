@@ -37,14 +37,15 @@
                                     Value="{Binding CurrentNumber, Mode=TwoWay}"
                                     Minimum="1" DefaultValue="1" Text="1"
                                     Margin="3" Width="60" />
-                <CheckBox x:Name="TrueFalseMark" Margin="3" 
+                <CheckBox x:Name="StatementIsTrue"
+                          AutomationProperties.AutomationId="StatementIsTrue"
                           IsChecked="{Binding Path=CurrentStatement.IsTrue, Mode=TwoWay}" 
-                          VerticalAlignment="Center" Content="Is true?" />
+                          Margin="3" VerticalAlignment="Center" Content="Is true?" />
             </StackPanel>
         </Grid>
 
         <TextBox x:Name="StatementText" 
-                 AutomationProperties.AutomationId="CurrentStatement"
+                 AutomationProperties.AutomationId="StatementText"
                  Text="{Binding Path=CurrentStatement.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
     </DockPanel>
 </UserControl>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<ArrayOfStatement xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Statement>
+    <IsTrue>true</IsTrue>
+    <Text>true</Text>
+  </Statement>
+  <Statement>
+    <IsTrue>false</IsTrue>
+    <Text>false</Text>
+  </Statement>
+</ArrayOfStatement>
