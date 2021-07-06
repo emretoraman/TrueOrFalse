@@ -1,6 +1,4 @@
 ﻿using FlaUI.Core.AutomationElements;
-using FlaUI.Core.Definitions;
-using System.Linq;
 
 namespace TrueOrFalse.Tests.WindowWrappers
 {
@@ -22,13 +20,5 @@ namespace TrueOrFalse.Tests.WindowWrappers
         {
             _window.FindFirstDescendant("True").As<Button>().Click();
         }
-
-        public string GetResult()
-        {
-            Window modalWindow = _window.ModalWindows.First(w => w.Name == "Result");
-            Label label = modalWindow.FindFirstDescendant(cf => cf.ByControlType(ControlType.Text)).As<Label>();
-            return label.Text;
-        }
-
     }
 }

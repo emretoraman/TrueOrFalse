@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using TrueOrFalse.ViewModels;
 
@@ -27,9 +28,15 @@ namespace TrueOrFalse.Views
             return new DialogResult(result, result == true ? openFileDialog.FileName : null);
         }
 
-        public void OpenInfoWindow(string caption, string text)
+        public Task OpenInfoWindow(string caption, string text)
         {
-            MessageBox.Show(text, caption, MessageBoxButton.OK, MessageBoxImage.Information);
+            TaskCompletionSource taskCompletionSource = new();
+            Task.Run(() => 
+            {
+                MessageBox.Show(text, caption, MessageBoxButton.OK, MessageBoxImage.Information);
+                taskCompletionSource.SetResult();
+            });
+            return taskCompletionSource.Task;
         }
     }
 }

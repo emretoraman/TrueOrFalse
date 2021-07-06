@@ -1,9 +1,11 @@
-﻿namespace TrueOrFalse.ViewModels
+﻿using System.Threading.Tasks;
+
+namespace TrueOrFalse.ViewModels
 {
     public interface IDialogService
     {
         DialogResult SaveFileDialog();
         DialogResult OpenFileDialog();
-        void OpenInfoWindow(string caption, string text);
+        Task OpenInfoWindow(string caption, string text);
     }
 }

@@ -8,114 +8,89 @@ namespace TrueOrFalse.ViewModels
 {
     public class GameViewModel : Screen
     {
-        private readonly List<Statement> _statements;
         private readonly IDialogService _dialogService;
+        private readonly List<Statement> _statements;
         private int _statementNumber;
-        private string _statementText;
         private int _score;
 
-        public GameViewModel(List<Statement> statements, IDialogService dialogService)
+        public GameViewModel(IDialogService dialogService, List<Statement> statements)
         {
-            _statements = statements;
             _dialogService = dialogService;
-            NumberOfStatements = _statements.Count;
+            _statements = statements;
 
-            ShowNext();
+            StatementNumber = 1;
+            Score = 0;
         }
 
-        public int NumberOfStatements { get; }
+        public string StatementText => CurrentStatement.Text;
 
-        public int StatementNumber
+        public int NumberOfStatements => _statements.Count;
+
+        public int StatementNumber 
         {
             get => _statementNumber;
-            set
+            private set
             {
                 _statementNumber = value;
-                NotifyOfPropertyChange();
-            }
-        }
 
-        public string StatementText
-        {
-            get => _statementText;
-            set
-            {
-                _statementText = value;
                 NotifyOfPropertyChange();
+                NotifyOfPropertyChange(() => StatementText);
             }
         }
 
         public int Score
         {
             get => _score;
-            set
+            private set
             {
                 _score = value;
+
                 NotifyOfPropertyChange();
             }
         }
 
-        public Statement CurrentStatement => _statements[StatementNumber - 1];
+        private Statement CurrentStatement => _statements[StatementNumber - 1];
 
         protected override Task OnActivateAsync(CancellationToken cancellationToken)
         {
             DisplayName = "Game";
-
             return base.OnActivateAsync(cancellationToken);
-        }
-
-        public static void Exit()
-        {
-        }
-
-        public void True()
-        {
-            ProcessAnswer(true);
         }
 
         public void False()
         {
-            ProcessAnswer(false);
+            _ = ProcessAnswer(false);
         }
 
-        public bool EndOfGame()
+        public void True()
         {
-            return StatementNumber == _statements.Count;
+            _ = ProcessAnswer(true);
         }
 
-        public GameResult GetResult()
+        private async Task ProcessAnswer(bool answer)
         {
-            double result = Score * 100 / NumberOfStatements;
-            return result > 70 ? GameResult.Win : GameResult.Loss;
-        }
-
-        private void ShowNext()
-        {
-            StatementNumber++;
-            StatementText = _statements[StatementNumber - 1].Text;
-        }
-
-        private void ProcessAnswer(bool answer)
-        {
-            bool isCorrect = answer == CurrentStatement.IsTrue;
-            if (isCorrect)
+            if (answer == CurrentStatement.IsTrue)
             {
                 Score++;
             }
 
-            if (EndOfGame())
+            if (StatementNumber == NumberOfStatements)
             {
-                GameResult result = GetResult();
-                _dialogService.OpenInfoWindow("Result", result.ToString());
-
-                TryCloseAsync();
+                await _dialogService.OpenInfoWindow("Result", GetResult().ToString());
+                StatementNumber = 1;
+                Score = 0;
             }
             else
             {
-                ShowNext();
+                StatementNumber++;
             }
         }
 
+        private GameResult GetResult()
+        {
+            double score = (double)Score * 100 / NumberOfStatements;
+            return score >= 70 ? GameResult.Win : GameResult.Loss;
+        }
     }
 
     public enum GameResult

@@ -9,11 +9,12 @@ namespace TrueOrFalse.Models
         Statement this[int index] { get; }
         int Count { get; }
         List<Statement> List { get; }
-        string FileName { get; set; }
+        string FileName { get; }
         void Add(Statement statement);
         void Remove(int index);
-        void Save();
-        void Load();
+        void New();
+        void Save(string fileName);
+        void Load(string fileName);
         void Change(int index, Statement statement);
         bool Exists(int index);
     }
@@ -22,10 +23,7 @@ namespace TrueOrFalse.Models
     {
         private List<Statement> _list = new();
 
-        public Persistence(string fileName)
-        {
-            FileName = fileName;
-        }
+        private string _fileName;
 
         public Statement this[int index] => _list[index];
 
@@ -33,7 +31,7 @@ namespace TrueOrFalse.Models
 
         public List<Statement> List => _list;
 
-        public string FileName { get; set; }
+        public string FileName => _fileName;
 
         public void Add(Statement statement)
         {
@@ -45,18 +43,26 @@ namespace TrueOrFalse.Models
             _list.RemoveAt(index);
         }
 
-        public void Save()
+        public void New()
         {
+            _list = new();
+            _fileName = null;
+        }
+
+        public void Save(string fileName)
+        {
+            _fileName = fileName;
             XmlSerializer xmlSerializer = new(typeof(List<Statement>));
-            FileStream fileStream = new(FileName, FileMode.Create, FileAccess.Write);
+            FileStream fileStream = new(_fileName, FileMode.Create, FileAccess.Write);
             xmlSerializer.Serialize(fileStream, _list);
             fileStream.Close();
         }
 
-        public void Load()
+        public void Load(string fileName)
         {
+            _fileName = fileName;
             XmlSerializer xmlSerializer = new(typeof(List<Statement>));
-            FileStream fileStream = new(FileName, FileMode.Open, FileAccess.Read);
+            FileStream fileStream = new(_fileName, FileMode.Open, FileAccess.Read);
             _list = (List<Statement>)xmlSerializer.Deserialize(fileStream);
             fileStream.Close();
         }

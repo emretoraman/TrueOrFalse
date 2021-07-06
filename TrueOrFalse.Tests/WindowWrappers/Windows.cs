@@ -15,5 +15,7 @@ namespace TrueOrFalse.Tests.WindowWrappers
         public static MainWindow Main => new(_application.GetMainWindow(new UIA3Automation()));
 
         public static GameWindow Game => new(Main.GetGameWindow());
+
+        public static ResultWindow Result => new(_application.GetMainWindow(new UIA3Automation()));
     }
 }

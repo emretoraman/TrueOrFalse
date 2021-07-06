@@ -12,6 +12,7 @@ namespace TrueOrFalse.Tests.AcceptanceTests
     public class EditingSteps
     {
         private List<Statement> _statements;
+        private Statement _savedStatement;
 
         [Given(@"I have five statements")]
         public void GivenIHaveFiveStatements()
@@ -59,8 +60,9 @@ namespace TrueOrFalse.Tests.AcceptanceTests
         }
 
         [When(@"I save the editings")]
-        public static void WhenSaveTheEditings()
+        public void WhenISaveTheEditings()
         {
+            _savedStatement = Windows.Main.GetStatement();
             Windows.Main.SaveStatement();
         }
 
@@ -84,7 +86,7 @@ namespace TrueOrFalse.Tests.AcceptanceTests
             Statement actual = Windows.Main.GetStatement();
             Statement expected = _statements[0];
 
-            Assert.Equal(expected, actual);
+            Assert.True(expected.HasEqualValues(actual));
         }
 
         [Then(@"it gets saved")]
@@ -92,9 +94,9 @@ namespace TrueOrFalse.Tests.AcceptanceTests
         {
             Windows.Main.PreviousStatement();
             Statement actual = Windows.Main.GetStatement();
-            Statement expected = _statements[0];
+            Statement expected = _savedStatement;
 
-            Assert.NotEqual(expected, actual);
+            Assert.True(expected.HasEqualValues(actual));
         }
 
         [Then(@"only one statement remains in the list")]

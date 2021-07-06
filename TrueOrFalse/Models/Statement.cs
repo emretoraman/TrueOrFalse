@@ -5,18 +5,17 @@ namespace TrueOrFalse.Models
     [Serializable]
     public class Statement : BaseModel
     {
+        private static readonly Statement _empty = new(default, default);
         private string _text;
         private bool _isTrue;
-
-        public Statement()
-        { 
-        }
 
         public Statement(string text, bool isTrue)
         {
             Text = text;
             IsTrue = isTrue;
         }
+
+        public static Statement Empty => _empty;
 
         public string Text
         {
@@ -38,14 +37,9 @@ namespace TrueOrFalse.Models
             }
         }
 
-        public override bool Equals(object obj)
+        public bool HasEqualValues(Statement other)
         {
-            return obj is Statement other && Text == other.Text && IsTrue == other.IsTrue;
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
+            return Text == other.Text && IsTrue == other.IsTrue;
         }
     }
 }

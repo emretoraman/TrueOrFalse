@@ -16,13 +16,8 @@
             <TextBlock x:Name="StatementText" HorizontalAlignment="Center" />
         </Viewbox>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="1"
-                    VerticalAlignment="Center" HorizontalAlignment="Left">
-            <Button x:Name="Exit" Content="Exit" Margin="3" Width="60" Height="30" />
-        </StackPanel>
-
         <StackPanel Orientation="Horizontal" Grid.Row="1" 
-                    VerticalAlignment="Center" HorizontalAlignment="Center">
+                    VerticalAlignment="Center" HorizontalAlignment="Left">
             <Button x:Name="False" Content="False" Margin="3" Width="60" Height="30" />
             <Button x:Name="True" Content="True" Margin="3" Width="60" Height="30" />
         </StackPanel>
@@ -31,9 +26,9 @@
             <StackPanel Margin="3,3,6,0" 
                         Orientation="Horizontal" VerticalAlignment="Center" >
                 <TextBlock>Statement&#160;</TextBlock>
-                <TextBlock x:Name="StatementNumber">0</TextBlock>
+                <TextBlock x:Name="StatementNumber" />
                 <TextBlock>&#160;of&#160;</TextBlock>
-                <TextBlock x:Name="NumberOfStatements">0</TextBlock>
+                <TextBlock x:Name="NumberOfStatements" />
             </StackPanel>
             <StackPanel Margin="3,3,6,3" 
                         Orientation="Horizontal" VerticalAlignment="Center" >

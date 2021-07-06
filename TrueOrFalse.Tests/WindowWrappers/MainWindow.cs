@@ -1,5 +1,4 @@
 ﻿using FlaUI.Core.AutomationElements;
-using FlaUI.Core.Definitions;
 using System.Linq;
 using TrueOrFalse.Models;
 
@@ -88,12 +87,6 @@ namespace TrueOrFalse.Tests.WindowWrappers
 
             return number;
         }
-
-        //private int GetStatementNumber()
-        //{
-        //    TextBox textBox = _window.FindFirstDescendant(cf => cf.ByName("PART_TextBox")).As<TextBox>();
-        //    return int.Parse(textBox.Text);
-        //}
 
         private TextBox GetStamentNumberTextBox()
         {

@@ -59,7 +59,7 @@ namespace TrueOrFalse.Tests.AcceptanceTests
         [Then(@"I win the game")]
         public static void ThenIWinTheGame()
         {
-            Assert.Equal("Win", Windows.Game.GetResult());
+            Assert.Equal("Win", Windows.Result.GetResult());
         }
     }
 }

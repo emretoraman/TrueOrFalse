@@ -3,8 +3,6 @@ using Castle.Core;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using System.Windows;
 using TrueOrFalse.Models;
 using TrueOrFalse.ViewModels;
@@ -21,11 +19,6 @@ namespace TrueOrFalse
             Initialize();
         }
 
-        protected override IEnumerable<Assembly> SelectAssemblies()
-        {
-            return new[] { Assembly.GetExecutingAssembly() };
-        }
-
         protected override void Configure()
         {
             _windsorContainer = new WindsorContainer();
@@ -34,13 +27,15 @@ namespace TrueOrFalse
                     .ImplementedBy<EventAggregator>()
                     .LifestyleSingleton(),
                 Component.For<IDialogService>()
-                    .ImplementedBy<DialogService>(),
+                    .ImplementedBy<DialogService>()
+                    .LifestyleSingleton(),
                 Component.For<IWindowManager>()
                     .ImplementedBy<WindowManager>()
                     .LifestyleSingleton(),
                 Component.For<IPersistence>()
                     .ImplementedBy<Persistence>()
-                    .DependsOn(Dependency.OnValue<string>("database.xml"))
+                    .LifestyleSingleton(),
+                Component.For<ViewModelFactory>()
                     .LifestyleSingleton()
             );
 

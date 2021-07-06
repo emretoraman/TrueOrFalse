@@ -14,6 +14,8 @@
                 <MenuItem x:Name="SaveDb" Header="Save" />
                 <MenuItem x:Name="SaveDbAs" Header="Save As..." />
                 <MenuItem x:Name="StartGame" Header="Start Game" />
+                <Separator />
+                <MenuItem x:Name="Exit" Header="Exit" />
             </MenuItem>
             <MenuItem Header="Edit">
                 <MenuItem x:Name="Cut" Header="Cut" />
@@ -35,6 +37,7 @@
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="1">
                 <xctk:IntegerUpDown x:Name="StatementNumber"
                                     Value="{Binding CurrentNumber, Mode=TwoWay}"
+                                    Maximum="{Binding MaximumNumber}"
                                     Minimum="1" DefaultValue="1" Text="1"
                                     Margin="3" Width="60" />
                 <CheckBox x:Name="StatementIsTrue"
