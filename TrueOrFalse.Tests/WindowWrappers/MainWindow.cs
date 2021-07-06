@@ -16,8 +16,7 @@ namespace TrueOrFalse.Tests.WindowWrappers
 
         public Window GetGameWindow()
         {
-            //todo:
-            return _window.ModalWindows.First();
+            return _window.ModalWindows.First(w => w.Name == "Game");
         }
 
         public void StartGame()

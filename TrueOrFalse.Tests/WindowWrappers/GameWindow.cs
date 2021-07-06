@@ -25,8 +25,7 @@ namespace TrueOrFalse.Tests.WindowWrappers
 
         public string GetResult()
         {
-            //todo:
-            Window modalWindow = _window.ModalWindows.First();
+            Window modalWindow = _window.ModalWindows.First(w => w.Name == "Result");
             Label label = modalWindow.FindFirstDescendant(cf => cf.ByControlType(ControlType.Text)).As<Label>();
             return label.Text;
         }
